@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WOI JARWOI - Price List Services</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Orbitron & Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            bg: '#080a10',
+                            card: '#0e1322',
+                            border: '#1e293b',
+                            accent: '#00f0ff',
+                            purple: '#8a2be2',
+                            pink: '#ff007f',
+                            gold: '#ffd700'
+                        }
+                    },
+                    fontFamily: {
+                        heading: ['Orbitron', 'sans-serif'],
+                        body: ['Plus Jakarta Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #05070f;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #080a10;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f0ff;
+        }
+
+        /* Cyberpunk Glow Effects */
+        .neon-glow-cyan {
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.35);
+        }
+        .neon-glow-purple {
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.35);
+        }
+        .neon-glow-gold {
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .neon-text-cyan {
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+        }
+        .neon-text-pink {
+            text-shadow: 0 0 10px rgba(255, 0, 127, 0.6);
+        }
+        .neon-text-gold {
+            text-shadow: 0 0 12px rgba(255, 215, 0, 0.8);
+        }
+
+        /* Glassmorphism */
+        .glass-card {
+            background: rgba(14, 19, 34, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(0, 240, 255, 0.4);
+            transform: translateY(-4px);
+        }
+
+        /* Custom Animated Gradient Background Grid */
+        .cyber-grid {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+        .animate-pulse-glow {
+            animation: pulseGlow 3s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="cyber-grid min-h-screen relative pb-24">
+
+    <!-- Ambient Glowing Orbs -->
+    <div class="fixed top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none animate-pulse-glow"></div>
+    <div class="fixed bottom-1/3 right-10 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl pointer-events-none animate-pulse-glow"></div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed top-5 right-5 z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex items-center gap-3 bg-slate-900 border border-cyan-500/50 text-white px-5 py-3 rounded-xl shadow-2xl">
+        <i class="fa-solid fa-circle-check text-cyan-400 text-lg" id="toast-icon"></i>
+        <span id="toast-message" class="text-sm font-medium">Notification message</span>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+        
+        <!-- HEADER / HERO SECTION -->
+        <header class="text-center relative py-10 rounded-3xl overflow-hidden glass-card mb-10 border border-cyan-500/20 shadow-2xl">
+            <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 pointer-events-none"></div>
+            
+            <!-- Status Badge -->
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-950/80 border border-cyan-500/40 text-cyan-400 text-xs sm:text-sm font-semibold mb-6 shadow-inner tracking-wide">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 -ml-5"></span>
+                <span>🔥 Layanan Aktif, Terpercaya, & Siap Pakai!</span>
+            </div>
+
+            <!-- Main Title -->
+            <h1 class="font-heading text-4xl sm:text-6xl lg:text-7xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-500 neon-text-cyan mb-3">
+                WOI JARWOI
+            </h1>
+            <p class="font-heading text-sm sm:text-xl text-slate-400 font-semibold tracking-widest uppercase mb-8">
+                ⚡️ PRICE LIST SERVICES ⚡️
+            </p>
+
+            <!-- Search & Filter Controls -->
+            <div class="max-w-3xl mx-auto px-4 space-y-4">
+                <!-- Search Bar -->
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg"></i>
+                    <input type="text" id="searchInput" placeholder="Cari layanan (contoh: Userbot, Menfess, VIP)..." 
+                        class="w-full bg-slate-900/90 border border-slate-700/80 focus:border-cyan-400 rounded-2xl py-3.5 pl-12 pr-4 text-slate-100 placeholder-slate-500 text-sm sm:text-base outline-none transition-all shadow-inner focus:ring-2 focus:ring-cyan-500/20">
+                </div>
+
+                <!-- Category Tabs -->
+                <div class="flex flex-wrap items-center justify-center gap-2 pt-2" id="categoryTabs">
+                    <button onclick="filterCategory('all')" data-cat="all" class="cat-btn active px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold shadow-lg shadow-cyan-500/20">
+                        ✨ Semua
+                    </button>
+                    <button onclick="filterCategory('userbot')" data-cat="userbot" class="cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all bg-slate-900/80 hover:bg-slate-800 border border-slate-700/60 text-slate-300">
+                        ⚡️ Userbot
+                    </button>
+                    <button onclick="filterCategory('modular')" data-cat="modular" class="cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all bg-slate-900/80 hover:bg-slate-800 border border-slate-700/60 text-slate-300">
+                        🤖 Bot Modular
+                    </button>
+                    <button onclick="filterCategory('custom')" data-cat="custom" class="cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all bg-slate-900/80 hover:bg-slate-800 border border-slate-700/60 text-slate-300">
+                        🛠 Custom Bot
+                    </button>
+                    <button onclick="filterCategory('highlight')" data-cat="highlight" class="cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all bg-slate-900/80 hover:bg-slate-800 border border-slate-700/60 text-slate-300">
+                        💌 Feature
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- SERVICES DISPLAY GRID -->
+        <main class="space-y-12">
+
+            <!-- CATEGORY 1: USERBOT PREMIUM -->
+            <section data-section="userbot" class="service-section">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="p-3 bg-cyan-500/10 border border-cyan-500/30 rounded-2xl text-cyan-400">
+                        <i class="fa-solid fa-bolt text-xl sm:text-2xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-heading text-xl sm:text-2xl font-bold text-white tracking-wide">USERBOT PREMIUM</h2>
+                        <p class="text-xs sm:text-sm text-slate-400">Nikmati kemudahan & otomasi akun tanpa ribet!</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Userbot Lite -->
+                    <div class="service-card glass-card rounded-2xl p-6 transition-all relative flex flex-col justify-between" data-name="userbot lite" data-cat="userbot">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700">Lite Edition</span>
+                                <i class="fa-solid fa-robot text-2xl text-slate-500"></i>
+                            </div>
+                            <h3 class="font-heading text-xl font-bold text-white mb-2">Userbot Lite</h3>
+                            <p class="text-xs text-slate-400 mb-6">Fitur dasar otomasi Telegram ringan dan cepat untuk penggunaan harian.</p>
+                            <div class="text-3xl font-heading font-extrabold text-cyan-400 mb-6">
+                                Rp 10.000 <span class="text-xs font-normal text-slate-400 font-body">/ bln</span>
+                            </div>
+                        </div>
+                        <button onclick="addToCart('Userbot Lite', 10000, 'bln')" class="w-full py-3 rounded-xl bg-slate-800 hover:bg-cyan-600 text-cyan-300 hover:text-white font-semibold text-sm transition-all border border-cyan-500/30 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cart-plus"></i> Tambah ke Order
+                        </button>
+                    </div>
+
+                    <!-- Userbot Basic -->
+                    <div class="service-card glass-card rounded-2xl p-6 transition-all relative flex flex-col justify-between" data-name="userbot basic" data-cat="userbot">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-blue-950 text-blue-300 border border-blue-800">Standard</span>
+                                <i class="fa-solid fa-robot text-2xl text-blue-400"></i>
+                            </div>
+                            <h3 class="font-heading text-xl font-bold text-white mb-2">Userbot Basic</h3>
+                            <p class="text-xs text-slate-400 mb-6">Otomasi menengah lengkap dengan modul ekstra untuk pengelolaan grup.</p>
+                            <div class="text-3xl font-heading font-extrabold text-cyan-400 mb-6">
+                                Rp 20.000 <span class="text-xs font-normal text-slate-400 font-body">/ bln</span>
+                            </div>
+                        </div>
+                        <button onclick="addToCart('Userbot Basic', 20000, 'bln')" class="w-full py-3 rounded-xl bg-slate-800 hover:bg-cyan-600 text-cyan-300 hover:text-white font-semibold text-sm transition-all border border-cyan-500/30 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cart-plus"></i> Tambah ke Order
+                        </button>
+                    </div>
+
+                    <!-- Userbot Pro (Highlighted / Popular) -->
+                    <div class="service-card glass-card rounded-2xl p-6 transition-all relative flex flex-col justify-between border-2 border-cyan-400/80 neon-glow-cyan bg-slate-900/90" data-name="userbot pro" data-cat="userbot">
+                        <div class="absolute -top-3.5 right-6 px-3 py-1 bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-xs font-bold rounded-full shadow-lg tracking-wider">
+                            🔥 MOST POPULAR
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-cyan-950 text-cyan-300 border border-cyan-700">Full Power</span>
+                                <i class="fa-solid fa-meteor text-2xl text-cyan-400"></i>
+                            </div>
+                            <h3 class="font-heading text-xl font-bold text-white mb-2">Userbot Pro</h3>
+                            <p class="text-xs text-slate-300 mb-6">Fitur penuh, kecepatan maksimal, dukungan modul lengkap tanpa batas.</p>
+                            <div class="text-3xl font-heading font-extrabold text-cyan-400 mb-6">
+                                Rp 30.000 <span class="text-xs font-normal text-slate-400 font-body">/ bln</span>
+                            </div>
+                        </div>
+                        <button onclick="addToCart('Userbot Pro', 30000, 'bln')" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-sm transition-all shadow-md shadow-cyan-500/30 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cart-plus"></i> Tambah ke Order
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CATEGORY 2: BOT MODULAR SYSTEM -->
+            <section data-section="modular" class="service-section">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="p-3 bg-purple-500/10 border border-purple-500/30 rounded-2xl text-purple-400">
+                        <i class="fa-solid fa-cubes text-xl sm:text-2xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-heading text-xl sm:text-2xl font-bold text-white tracking-wide">BOT MODULAR SYSTEM</h2>
+                        <p class="text-xs sm:text-sm text-slate-400">Pilihan bot multifungsi untuk kelancaran grup & channel Anda</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                    <!-- Ankes -->
+                    <div class="service-card glass-card rounded-2xl p-6 transition-all flex flex-col justify-between" data-name="ankes" data-cat="modular">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <h3 class="font-heading text-lg font-bold text-white">💎 Ankes</h3>
+                                <span class="text-xs px-2.5 py-1 rounded-md bg-purple-950/80 text-purple-300 border border-purple-800">1 Akses</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mb-4">Sistem bot manajemen & penanganan pesan grup khusus.</p>
+                            <div class="text-2xl font-heading font-bold text-purple-400 mb-4">Rp 15.000</div>
+                        </div>
+                        <button onclick="addToCart('Ankes Bot', 15000, '1 Akses')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-purple-600 text-purple-300 hover:text-white font-semibold text-xs transition-all border border-purple-500/30 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cart-plus"></i> Tambah Order
+                        </button>
+                    </div>
+
+                    <!-- Fsub -->
+                    <div class="service-card glass-card rounded-2xl p-6 transition-all flex flex-col justify-between" data-name="fsub force subscribe" data-cat="modular">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <h3 class="font-heading text-lg font-bold text-white">💎 Fsub</h3>
+                                <span class="text-xs px-2.5 py-1 rounded-md bg-purple-950/80 text-purple-300 border border-purple-800">1 Akses</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mb-4">Force Subscribe channel otomatis sebelum member dapat chat di grup.</p>
+                            <div class="text-2xl font-heading font-bold text-purple-400 mb-4">Rp 15.000</div>
+                        </div>
+                        <button onclick="addToCart('Fsub Bot', 15000, '1 Akses')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-purple-600 text-purple-300 hover:text-white font-semibold text-xs transition-all border border-purple-500/30 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cart-plus"></i> Tambah Order
+                        </button>
+                    </div>
+
+                    <!-- Notifier Channel -->
+                    <div class="service-card glass-card rounded-2xl p-6 transition-all flex flex-col justify-between" data-name="notifier channel" data-cat="modular">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <h3 class="font-heading text-lg font-bold text-white">💎 Notifier Channel</h3>
+                                <span class="text-xs px-2.5 py-1 rounded-md bg-purple-950/80 text-purple-300 border border-purple-800">1 Akses</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mb-4">Pengirim notifikasi otomatis secara real-time ke channel Anda.</p>
+                            <div class="text-2xl font-heading font-bold text-purple-400 mb-4">Rp 15.000</div>
+                        </div>
+                        <button onclick="addToCart('Notifier Channel', 15000, '1 Akses')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-purple-600 text-purple-300 hover:text-white font-semibold text-xs transition-all border border-purple-500/30 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cart-plus"></i> Tambah Order
+                        </button>
+                    </div>
+
+                    <!-- Message Repeater -->
+                    <div class="service-card glass-card rounded-2xl p-6 transition-all flex flex-col justify-between" data-name="message repeater" data-cat="modular">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <h3 class="font-heading text-lg font-bold text-white">💎 Message Repeater</h3>
+                                <span class="text-xs px-2.5 py-1 rounded-md bg-purple-950/80 text-purple-300 border border-purple-800">3 Akses</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mb-4">Penjadwal pesan berkala otomatis untuk promosi & info grup.</p>
+                            <div class="text-2xl font-heading font-bold text-purple-400 mb-4">Rp 75.000</div>
+                        </div>
+                        <button onclick="addToCart('Message Repeater', 75000, '3 Akses')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-purple-600 text-purple-300 hover:text-white font-semibold text-xs transition-all border border-purple-500/30 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cart-plus"></i> Tambah Order
+                        </button>
+                    </div>
+
+                    <!-- Pap Rate -->
+                    <div class="service-card glass-card rounded-2xl p-6 transition-all flex flex-col justify-between" data-name="pap rate" data-cat="modular">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <h3 class="font-heading text-lg font-bold text-white">💎 Pap Rate</h3>
+                                <span class="text-xs px-2.5 py-1 rounded-md bg-purple-950/80 text-purple-300 border border-purple-800">2 Akses</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mb-4">Bot hiburan interaktif rating foto otomatis di grup komunitas.</p>
+                            <div class="text-2xl font-heading font-bold text-purple-400 mb-4">Rp 75.000</div>
+                        </div>
+                        <button onclick="addToCart('Pap Rate Bot', 75000, '2 Akses')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-purple-600 text-purple-300 hover:text-white font-semibold text-xs transition-all border border-purple-500/30 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cart-plus"></i> Tambah Order
+                        </button>
+                    </div>
+
+                    <!-- Menfess -->
+                    <div class="service-card glass-card rounded-2xl p-6 transition-all flex flex-col justify-between" data-name="menfess modular" data-cat="modular">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <h3 class="font-heading text-lg font-bold text-white">💎 Menfess</h3>
+                                <span class="text-xs px-2.5 py-1 rounded-md bg-purple-950/80 text-purple-300 border border-purple-800">2 Akses</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mb-4">Sistem bot pengirim pesan rahasia / curhat ke channel publik.</p>
+                            <div class="text-2xl font-heading font-bold text-purple-400 mb-4">Rp 100.000</div>
+                        </div>
+                        <button onclick="addToCart('Menfess Modular', 100000, '2 Akses')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-purple-600 text-purple-300 hover:text-white font-semibold text-xs transition-all border border-purple-500/30 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cart-plus"></i> Tambah Order
+                        </button>
+                    </div>
+
+                    <!-- PT Auto Tagall -->
+                    <div class="service-card glass-card rounded-2xl p-6 transition-all flex flex-col justify-between" data-name="pt auto tagall mention" data-cat="modular">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <h3 class="font-heading text-lg font-bold text-white">💎 PT Auto Tagall</h3>
+                                <span class="text-xs px-2.5 py-1 rounded-md bg-purple-950/80 text-purple-300 border border-purple-800">1 Akses</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mb-4">Mention seluruh member grup secara cepat & efektif tanpa spam limit.</p>
+                            <div class="text-2xl font-heading font-bold text-purple-400 mb-4">Rp 100.000</div>
+                        </div>
+                        <button onclick="addToCart('PT Auto Tagall', 100000, '1 Akses')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-purple-600 text-purple-300 hover:text-white font-semibold text-xs transition-all border border-purple-500/30 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cart-plus"></i> Tambah Order
+                        </button>
+                    </div>
+
+                    <!-- Copy Content -->
+                    <div class="service-card glass-card rounded-2xl p-6 transition-all flex flex-col justify-between" data-name="copy content unrestricted" data-cat="modular">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <h3 class="font-heading text-lg font-bold text-white">💎 Copy Content</h3>
+                                <span class="text-xs px-2.5 py-1 rounded-md bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold">Unlimited</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mb-4">Salin pesan/media dari channel terproteksi tanpa pembatasan.</p>
+                            <div class="text-2xl font-heading font-bold text-purple-400 mb-4">Rp 100.000</div>
+                        </div>
+                        <button onclick="addToCart('Copy Content Bot', 100000, 'Unlimited')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-purple-600 text-purple-300 hover:text-white font-semibold text-xs transition-all border border-purple-500/30 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cart-plus"></i> Tambah Order
+                        </button>
+                    </div>
+
+                    <!-- VIP Modular (Crown VIP Styling) -->
+                    <div class="service-card glass-card rounded-2xl p-6 transition-all flex flex-col justify-between border-2 border-amber-400/80 neon-glow-gold bg-gradient-to-b from-amber-950/40 to-slate-900" data-name="vip modular system" data-cat="modular">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <h3 class="font-heading text-lg font-bold text-amber-300 neon-text-gold flex items-center gap-2">
+                                    <i class="fa-solid fa-crown text-amber-400"></i> VIP Modular
+                                </h3>
+                                <span class="text-xs px-2.5 py-1 rounded-md bg-amber-500 text-slate-950 font-bold shadow-md">Unlimited</span>
+                            </div>
+                            <p class="text-xs text-slate-300 mb-4">Akses penuh ke seluruh bot modular system tanpa ada batas penggunaan.</p>
+                            <div class="text-3xl font-heading font-extrabold text-amber-400 mb-4">Rp 100.000</div>
+                        </div>
+                        <button onclick="addToCart('👑 VIP Modular', 100000, 'Unlimited')" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-xs transition-all shadow-md shadow-amber-500/20 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-crown"></i> Claim VIP Access
+                        </button>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- CATEGORY 3: JASA PEMBUATAN BOT CUSTOM -->
+            <section data-section="custom" class="service-section">
+                <div class="glass-card rounded-3xl p-6 sm:p-10 border border-cyan-500/30 relative overflow-hidden bg-gradient-to-r from-slate-900 via-cyan-950/30 to-slate-900">
+                    <div class="absolute -right-12 -bottom-12 w-64 h-64 bg-cyan-500/10 rounded-full blur-2xl"></div>
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
+                        <div class="space-y-4 max-w-2xl text-center md:text-left">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-cyan-950 border border-cyan-800 text-cyan-400 text-xs font-semibold">
+                                <i class="fa-solid fa-screwdriver-wrench"></i> Custom System Development
+                            </div>
+                            <h2 class="font-heading text-2xl sm:text-4xl font-extrabold text-white">
+                                🛠 JASA PEMBUATAN BOT CUSTOM
+                            </h2>
+                            <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                                Punya ide sistem sendiri? Kami siap mewujudkannya! Menerima pembuatan berbagai macam bot kustom sesuai spesifikasi, fitur khusus, & kebutuhan bisnis atau komunitas Anda.
+                            </p>
+                            <div class="flex flex-wrap gap-4 pt-2 justify-center md:justify-start text-xs text-slate-400">
+                                <span class="flex items-center gap-1.5"><i class="fa-solid fa-check text-cyan-400"></i> Python / Node.js</span>
+                                <span class="flex items-center gap-1.5"><i class="fa-solid fa-check text-cyan-400"></i> Fast & Reliable Hosting</span>
+                                <span class="flex items-center gap-1.5"><i class="fa-solid fa-check text-cyan-400"></i> 24/7 Support</span>
+                            </div>
+                        </div>
+                        <div class="w-full md:w-auto text-center">
+                            <button onclick="openCustomBotModal()" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-600 hover:from-cyan-300 hover:to-blue-500 text-white font-heading font-bold text-sm sm:text-base shadow-xl shadow-cyan-500/30 transition-all transform hover:scale-105 flex items-center justify-center gap-3">
+                                <i class="fa-solid fa-paper-plane"></i> Konsultasi Bot Custom
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CATEGORY 4: FEATURE HIGHLIGHT (MENFESS SPOTLIGHT) -->
+            <section data-section="highlight" class="service-section">
+                <div class="glass-card rounded-3xl p-6 sm:p-8 border border-pink-500/30 bg-gradient-to-r from-slate-900 via-pink-950/20 to-slate-900 relative overflow-hidden">
+                    <div class="flex flex-col sm:flex-row items-center gap-6">
+                        <div class="p-5 rounded-2xl bg-pink-500/10 border border-pink-500/30 text-pink-400 shrink-0">
+                            <i class="fa-solid fa-heart-circle-bolt text-4xl sm:text-5xl"></i>
+                        </div>
+                        <div class="space-y-2 text-center sm:text-left flex-1">
+                            <div class="inline-block px-3 py-1 rounded-full bg-pink-950 text-pink-300 text-xs font-bold border border-pink-800">
+                                💌 FEATURE HIGHLIGHT
+                            </div>
+                            <h3 class="font-heading text-xl sm:text-2xl font-bold text-white">Kirim Pesan Rahasia / Confess</h3>
+                            <p class="text-xs sm:text-sm text-slate-300">
+                                Mau kirim pesan rahasia atau confess perasaanmu ke seseorang tanpa ketahuan identity-mu? Cobain sekarang melalui bot resmi kami!
+                            </p>
+                        </div>
+                        <div class="shrink-0 w-full sm:w-auto text-center">
+                            <button onclick="copyUsername('cegersfessbot')" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-pink-600 hover:bg-pink-500 text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-pink-600/30 flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-robot"></i> @cegersfessbot
+                                <i class="fa-solid fa-copy text-xs opacity-75"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- FOOTER & ADMIN CONTACTS -->
+        <footer class="mt-20 pt-10 border-t border-slate-800 text-center space-y-6">
+            <h4 class="font-heading text-lg font-bold text-slate-300">HUBUNGI ADMIN KAMI</h4>
+            
+            <div class="flex flex-wrap justify-center gap-4">
+                <button onclick="copyUsername('jarwokhwatdgs')" class="px-6 py-3 rounded-2xl glass-card hover:bg-slate-800 text-cyan-400 font-bold text-sm transition-all border border-cyan-500/30 flex items-center gap-2">
+                    <i class="fa-brands fa-telegram text-lg"></i> @jarwokhwatdgs
+                    <i class="fa-solid fa-copy text-xs text-slate-400 ml-2"></i>
+                </button>
+                <button onclick="copyUsername('kenapasinan')" class="px-6 py-3 rounded-2xl glass-card hover:bg-slate-800 text-purple-400 font-bold text-sm transition-all border border-purple-500/30 flex items-center gap-2">
+                    <i class="fa-brands fa-telegram text-lg"></i> @kenapasinan
+                    <i class="fa-solid fa-copy text-xs text-slate-400 ml-2"></i>
+                </button>
+            </div>
+
+            <p class="text-xs text-slate-500 font-medium pt-4">
+                © 2026 WOI JARWOI SERVICES. All rights reserved. Fast, Reliable & Powerful Telegram Automation.
+            </p>
+        </footer>
+
+    </div>
+
+    <!-- FLOATING CART FLOATING BUTTON -->
+    <div id="cartBar" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 w-11/12 max-w-xl glass-card rounded-2xl p-4 border border-cyan-500/40 shadow-2xl flex items-center justify-between gap-4 transition-all duration-300 transform translate-y-32 opacity-0">
+        <div class="flex items-center gap-3">
+            <div class="relative p-3 bg-cyan-500/20 rounded-xl text-cyan-400">
+                <i class="fa-solid fa-basket-shopping text-xl"></i>
+                <span id="cartCount" class="absolute -top-1.5 -right-1.5 bg-pink-500 text-white text-xs font-extrabold w-5 h-5 rounded-full flex items-center justify-center">0</span>
+            </div>
+            <div>
+                <div class="text-xs text-slate-400 font-medium">Total Price:</div>
+                <div id="cartTotal" class="font-heading font-extrabold text-cyan-400 text-lg sm:text-xl">Rp 0</div>
+            </div>
+        </div>
+        <button onclick="openCartModal()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-600 hover:from-cyan-300 hover:to-blue-500 text-white font-heading font-bold text-xs sm:text-sm shadow-lg shadow-cyan-500/30 transition-all">
+            Lihat Pesanan <i class="fa-solid fa-arrow-right ml-1"></i>
+        </button>
+    </div>
+
+    <!-- CART & CHECKOUT MODAL -->
+    <div id="cartModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="glass-card w-full max-w-lg rounded-3xl p-6 sm:p-8 border border-cyan-500/40 shadow-2xl space-y-6 relative max-h-[90vh] flex flex-col">
+            
+            <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                <h3 class="font-heading text-xl font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-cart-shopping text-cyan-400"></i> Detail Ringkasan Order
+                </h3>
+                <button onclick="closeCartModal()" class="text-slate-400 hover:text-white text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Cart Items List -->
+            <div id="cartItemsList" class="space-y-3 overflow-y-auto flex-1 pr-1">
+                <!-- Dynamic cart content will be injected here -->
+            </div>
+
+            <!-- Total Price Summary -->
+            <div class="border-t border-slate-800 pt-4 flex justify-between items-center">
+                <span class="text-slate-400 font-medium">Total Pembayaran:</span>
+                <span id="modalCartTotal" class="font-heading text-2xl font-black text-cyan-400">Rp 0</span>
+            </div>
+
+            <!-- Admin Selection for Telegram Direct Send -->
+            <div class="space-y-2">
+                <label class="text-xs font-semibold text-slate-300">Pilih Admin Tujuan Order:</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="cursor-pointer border border-slate-700 p-3 rounded-xl flex items-center gap-2 hover:border-cyan-500 transition-all bg-slate-900/60">
+                        <input type="radio" name="adminSelect" value="jarwokhwatdgs" checked class="text-cyan-500 focus:ring-0">
+                        <span class="text-xs font-bold text-slate-200">@jarwokhwatdgs</span>
+                    </label>
+                    <label class="cursor-pointer border border-slate-700 p-3 rounded-xl flex items-center gap-2 hover:border-purple-500 transition-all bg-slate-900/60">
+                        <input type="radio" name="adminSelect" value="kenapasinan" class="text-purple-500 focus:ring-0">
+                        <span class="text-xs font-bold text-slate-200">@kenapasinan</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-3 pt-2">
+                <button onclick="clearCart()" class="px-4 py-3 rounded-xl bg-slate-800 hover:bg-red-900/40 text-red-400 font-bold text-xs transition-all border border-slate-700">
+                    Reset
+                </button>
+                <button onclick="sendOrderTelegram()" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-600 hover:from-cyan-300 hover:to-blue-500 text-white font-heading font-bold text-sm transition-all shadow-lg shadow-cyan-500/30 flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-telegram text-lg"></i> Kirim Order via Telegram
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- CUSTOM BOT INQUIRY MODAL -->
+    <div id="customModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="glass-card w-full max-w-lg rounded-3xl p-6 sm:p-8 border border-cyan-500/40 shadow-2xl space-y-5 relative">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="font-heading text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-code text-cyan-400"></i> Form Request Bot Custom
+                </h3>
+                <button onclick="closeCustomBotModal()" class="text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3 text-xs sm:text-sm">
+                <div>
+                    <label class="block text-slate-300 font-medium mb-1">Nama Bot / Judul Project:</label>
+                    <input type="text" id="customProjectName" placeholder="Contoh: Bot Auto Store / Quiz Bot" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-slate-100 outline-none focus:border-cyan-400">
+                </div>
+                <div>
+                    <label class="block text-slate-300 font-medium mb-1">Deskripsi Spesifikasi & Fitur yang Diinginkan:</label>
+                    <textarea id="customProjectDesc" rows="4" placeholder="Jelaskan detail fitur, sistem kerja, atau alur bot yang ingin kamu buat..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-slate-100 outline-none focus:border-cyan-400"></textarea>
+                </div>
+                <div>
+                    <label class="block text-slate-300 font-medium mb-1">Pilih Admin Tujuan:</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="cursor-pointer border border-slate-700 p-2.5 rounded-xl flex items-center gap-2 bg-slate-900/60">
+                            <input type="radio" name="customAdminSelect" value="jarwokhwatdgs" checked>
+                            <span class="text-xs font-bold text-slate-200">@jarwokhwatdgs</span>
+                        </label>
+                        <label class="cursor-pointer border border-slate-700 p-2.5 rounded-xl flex items-center gap-2 bg-slate-900/60">
+                            <input type="radio" name="customAdminSelect" value="kenapasinan">
+                            <span class="text-xs font-bold text-slate-200">@kenapasinan</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="submitCustomBotOrder()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-600 hover:from-cyan-300 hover:to-blue-500 text-white font-heading font-bold text-xs sm:text-sm shadow-lg shadow-cyan-500/30 flex items-center justify-center gap-2">
+                <i class="fa-brands fa-telegram text-lg"></i> Kirim Spesifikasi ke Telegram
+            </button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // State
+        let cart = [];
+
+        // Helper: Format Rupiah
+        function formatRupiah(number) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(number);
+        }
+
+        // Toast Notification System
+        function showToast(message, isSuccess = true) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastMsg.innerText = message;
+            if (isSuccess) {
+                toastIcon.className = "fa-solid fa-circle-check text-cyan-400 text-lg";
+            } else {
+                toastIcon.className = "fa-solid fa-circle-exclamation text-pink-400 text-lg";
+            }
+
+            toast.classList.remove('translate-x-full');
+            setTimeout(() => {
+                toast.classList.add('translate-x-full');
+            }, 3000);
+        }
+
+        // Copy Username to Clipboard
+        function copyUsername(username) {
+            const textToCopy = '@' + username;
+            
+            // execCommand fallback
+            const dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = textToCopy;
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+
+            showToast(`Copied ${textToCopy} to clipboard!`);
+        }
+
+        // Cart Functions
+        function addToCart(name, price, period) {
+            const existingIndex = cart.findIndex(item => item.name === name);
+            if (existingIndex > -1) {
+                cart[existingIndex].qty += 1;
+            } else {
+                cart.push({ name, price, period, qty: 1 });
+            }
+            updateCartUI();
+            showToast(`${name} ditambahkan ke order!`);
+        }
+
+        function updateQty(index, delta) {
+            if (cart[index]) {
+                cart[index].qty += delta;
+                if (cart[index].qty <= 0) {
+                    cart.splice(index, 1);
+                }
+            }
+            updateCartUI();
+        }
+
+        function clearCart() {
+            cart = [];
+            updateCartUI();
+            closeCartModal();
+            showToast("Orderan berhasil dibersihkan.", false);
+        }
+
+        function updateCartUI() {
+            const cartBar = document.getElementById('cartBar');
+            const cartCount = document.getElementById('cartCount');
+            const cartTotal = document.getElementById('cartTotal');
+            const modalCartTotal = document.getElementById('modalCartTotal');
+            const cartItemsList = document.getElementById('cartItemsList');
+
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            cartCount.innerText = totalItems;
+            cartTotal.innerText = formatRupiah(totalPrice);
+            modalCartTotal.innerText = formatRupiah(totalPrice);
+
+            // Show/Hide Cart Bar
+            if (totalItems > 0) {
+                cartBar.classList.remove('translate-y-32', 'opacity-0');
+            } else {
+                cartBar.classList.add('translate-y-32', 'opacity-0');
+            }
+
+            // Render Modal List
+            if (cart.length === 0) {
+                cartItemsList.innerHTML = `<div class="text-center py-8 text-slate-500 text-sm">Keranjang orderan masih kosong.</div>`;
+            } else {
+                cartItemsList.innerHTML = cart.map((item, idx) => `
+                    <div class="flex items-center justify-between p-3 rounded-xl bg-slate-900/80 border border-slate-800">
+                        <div>
+                            <div class="font-bold text-white text-sm">${item.name}</div>
+                            <div class="text-xs text-cyan-400 font-semibold">${formatRupiah(item.price)} <span class="text-slate-500">(${item.period})</span></div>
+                        </div>
+                        <div class="flex items-center gap-3 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800">
+                            <button onclick="updateQty(${idx}, -1)" class="text-slate-400 hover:text-pink-400 font-bold px-1">-</button>
+                            <span class="text-xs font-bold text-white w-4 text-center">${item.qty}</span>
+                            <button onclick="updateQty(${idx}, 1)" class="text-slate-400 hover:text-cyan-400 font-bold px-1">+</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function openCartModal() {
+            if (cart.length === 0) return;
+            document.getElementById('cartModal').classList.remove('hidden');
+        }
+
+        function closeCartModal() {
+            document.getElementById('cartModal').classList.add('hidden');
+        }
+
+        // Send Order via Telegram Link Format
+        function sendOrderTelegram() {
+            if (cart.length === 0) return;
+
+            const selectedAdmin = document.querySelector('input[name="adminSelect"]:checked').value;
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            let message = `💸 *HALO ADMIN WOI JARWOI* 💸\nSaya mau order layanan berikut:\n\n`;
+            cart.forEach((item, index) => {
+                message += `${index + 1}. *${item.name}* x${item.qty} (${item.period}) - ${formatRupiah(item.price * item.qty)}\n`;
+            });
+
+            message += `\n💰 *Total Pembayaran:* ${formatRupiah(totalPrice)}\n\nMohon diproses ya admin, terima kasih! 🚀`;
+
+            const encodedMsg = encodeURIComponent(message);
+            const tgUrl = `https://t.me/${selectedAdmin}?text=${encodedMsg}`;
+
+            window.open(tgUrl, '_blank');
+        }
+
+        // Custom Bot Modal Functions
+        function openCustomBotModal() {
+            document.getElementById('customModal').classList.remove('hidden');
+        }
+
+        function closeCustomBotModal() {
+            document.getElementById('customModal').classList.add('hidden');
+        }
+
+        function submitCustomBotOrder() {
+            const name = document.getElementById('customProjectName').value.trim();
+            const desc = document.getElementById('customProjectDesc').value.trim();
+            const selectedAdmin = document.querySelector('input[name="customAdminSelect"]:checked').value;
+
+            if (!name || !desc) {
+                showToast("Harap isi nama project & deskripsi fitur!", false);
+                return;
+            }
+
+            const message = `🛠 *REQUEST JASA PEMBUATAN BOT CUSTOM* 🛠\n\n📌 *Project Name:* ${name}\n📝 *Spesifikasi Fitur:* ${desc}\n\nMohon info estimasi pengerjaan dan harga ya admin!`;
+
+            const encodedMsg = encodeURIComponent(message);
+            const tgUrl = `https://t.me/${selectedAdmin}?text=${encodedMsg}`;
+
+            window.open(tgUrl, '_blank');
+            closeCustomBotModal();
+        }
+
+        // Search & Filter Logic
+        function filterCategory(cat) {
+            // Update Active Tab Styling
+            const buttons = document.querySelectorAll('#categoryTabs .cat-btn');
+            buttons.forEach(btn => {
+                if (btn.getAttribute('data-cat') === cat) {
+                    btn.className = "cat-btn active px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20";
+                } else {
+                    btn.className = "cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all bg-slate-900/80 hover:bg-slate-800 border border-slate-700/60 text-slate-300";
+                }
+            });
+
+            // Filter Sections & Cards
+            const sections = document.querySelectorAll('.service-section');
+            sections.forEach(section => {
+                const sectionCat = section.getAttribute('data-section');
+                if (cat === 'all' || sectionCat === cat) {
+                    section.classList.remove('hidden');
+                } else {
+                    section.classList.add('hidden');
+                }
+            });
+        }
+
+        // Search input event
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.service-card');
+            const sections = document.querySelectorAll('.service-section');
+
+            if (query === '') {
+                // Restore tab state
+                const activeTab = document.querySelector('#categoryTabs .cat-btn.active').getAttribute('data-cat');
+                filterCategory(activeTab);
+                cards.forEach(card => card.classList.remove('hidden'));
+                return;
+            }
+
+            // Show all sections during active search
+            sections.forEach(section => section.classList.remove('hidden'));
+
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name').toLowerCase();
+                if (name.includes(query)) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
